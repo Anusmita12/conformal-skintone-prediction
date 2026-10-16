@@ -1,0 +1,11 @@
+@"
+data/*
+!data/README.md
+*.zip
+*.pt
+*.pth
+*.npy
+__pycache__/
+.venv/
+.ipynb_checkpoints/
+"@ | Out-File -Encoding utf8 .gitignore
