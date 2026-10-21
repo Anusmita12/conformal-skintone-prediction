@@ -1,0 +1,4 @@
+group,n_cal_malignant,n_test_malignant,expected_pct,observed_pct_oracle
+FST I-II,21.0,19.0,46.15384615384615,43.0
+FST III-IV,31.0,30.0,31.975987481902834,30.0
+FST V-VI,20.0,19.0,48.02494802494805,50.0

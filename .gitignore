@@ -1,10 +1,9 @@
-data/*
-!data/README.md
+# datasets (licensed, never commit)
+ddidiversedermatologyimages/
+pad_ufes/
+data/
 features/
-*.zip
-*.pt
-*.pth
-*.npy
+
+# OS / Python junk
+.DS_Store
 __pycache__/
-.venv/
-.ipynb_checkpoints/
