@@ -25,12 +25,11 @@ population is deployed on another. This repository studies:
 | `conformal.py` | LAC, APS, Mondrian / class-conditional conformal, metrics |
 | `tone_blind.py` | Tone-blind methods: tone-set union, tone-adaptive, plug-in, soft threshold, worst-case union |
 | `extract_features.py` | DDI / PAD-UFES-20 loading and frozen-backbone embeddings (ResNet-50, DINOv2 ViT-S/14) |
-| `extract_extra.py` | Fitzpatrick17k loading, MONET and DINOv2 ViT-B/14 backbones, ITA skin-colour features |
+| `extract_extra.py` | MONET (dermatology CLIP) backbone embeddings |
 | `run_experiment.py` | Experiment 1: in-domain DDI, repeated random splits |
 | `run_shift.py` | Experiment 2: PAD-UFES-20 → DDI shift and few-shot recalibration |
 | `run_tone_blind.py` | Experiment 3: tone-blind conformal prediction under shift |
 | `check_guarantee.py` | Synthetic sanity check of the guarantee (no data needed) |
-| `download_fitz17k.py` | Downloads Fitzpatrick17k images from the URLs in its CSV |
 | `run_all.ps1`, `run_tone_blind.ps1` | Run every experiment in the paper (PowerShell) |
 | `results/` | Aggregated results (per-trial and summary CSVs, figures) |
 
@@ -65,25 +64,14 @@ be obtained from the original sources.
 |---|---|---|---|
 | DDI (Diverse Dermatology Images) | target | [Stanford AIMI](https://aimi.stanford.edu/datasets/ddi-diverse-dermatology-images) (free account, research use agreement) | Stanford research use agreement, no redistribution |
 | PAD-UFES-20 | source | [Mendeley Data](https://data.mendeley.com/datasets/zr7vgbcyr2/1) | CC BY 4.0 |
-| Fitzpatrick17k | tone estimator / second target | [github.com/mattgroh/fitzpatrick17k](https://github.com/mattgroh/fitzpatrick17k) | annotations CC BY-NC-SA 3.0; images from their original sources |
 
 Place the data as follows (the `data/` folder is git-ignored):
 
 ```
 data/
 ├── ddi/            # unzipped DDI: ddi_metadata.csv + images
-├── pad_ufes/       # unzipped PAD-UFES-20: metadata.csv + images
-└── fitz17k/        # fitzpatrick17k.csv (+ images/ after running the script below)
+└── pad_ufes/       # unzipped PAD-UFES-20: metadata.csv + images
 ```
-
-Fitzpatrick17k images are fetched from their original URLs:
-
-```bash
-python download_fitz17k.py
-```
-
-Some URLs are no longer reachable, so the number of downloaded images may be
-lower than in the original release.
 
 ## Reproducing the paper
 
@@ -113,6 +101,9 @@ python run_shift.py --backbone dinov2_vits14 --alpha 0.1 --n_trials 100
 
 # 4. tone-blind conformal prediction
 python run_tone_blind.py --backbone dinov2_vits14 --alpha 0.1
+python extract_extra.py --dataset ddi      --backbone monet
+python extract_extra.py --dataset pad_ufes --backbone monet
+python run_tone_blind.py --backbone monet --alpha 0.1
 ```
 
 | Result | Command | Output |
@@ -142,7 +133,6 @@ Please cite the original work if you use this code:
 
 - DDI: Daneshjou et al., "Disparities in dermatology AI performance on a diverse, curated clinical image set," *Science Advances*, 2022.
 - PAD-UFES-20: Pacheco et al., "PAD-UFES-20: A skin lesion dataset composed of patient data and clinical images collected from smartphones," *Data in Brief*, 2020.
-- Fitzpatrick17k: Groh et al., "Evaluating deep neural networks trained on clinical images in dermatology with the Fitzpatrick 17k dataset," CVPR Workshops, 2021.
 - DINOv2: Oquab et al., "DINOv2: Learning robust visual features without supervision," *TMLR*, 2024.
 - MONET: Kim et al., "Transparent medical image AI via an image–text foundation model grounded in medical literature," *Nature Medicine*, 2024.
 
